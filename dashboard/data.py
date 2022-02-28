@@ -36,19 +36,21 @@ def betterSalariesForSeniority(conn):
 
 
 def companiesWithBetterSalaries(conn):
-    return execute(conn, """select max(p.salary), c.name 
+    return execute(conn, """select max(p.salary) salary, c.name 
                         from "position" p
                         inner join company c on (c.id_company = p.company_id) 
                         group by c.name
-                        order by 1 desc""")
+                        order by 1 desc
+                        limit 5""")
 
 
 def companiesWithLowestSalaries(conn):
-    return execute(conn, """select max(p.salary), c.name 
+    return execute(conn, """select max(p.salary) salary, c.name 
                             from "position" p
                             inner join company c on (c.id_company = p.company_id) 
                             group by c.name
-                            order by 1 asc""")
+                            order by 1 asc
+                            limit 5""")
 
 
 def mostRequestedSkills(conn):

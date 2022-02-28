@@ -1,18 +1,11 @@
 from urllib.parse import unquote
 from dash import html, dcc, Dash
-from dashboard.layouts import start, sample_size, salaries, salaries_table
 from dashboard.styles import base
 from dashboard.components.navigation import route
+from dashboard.routes import navigation
 from jupyter_dash import JupyterDash
 from dash.dependencies import Input, Output
 import dash_bootstrap_components as dbc
-
-navigation = {
-    "start": (None, "sample_size", start.page),
-    "sample_size": ("start", "salaries", sample_size.page),
-    "salaries": ("sample_size", "salaries_table", salaries.page),
-    "salaries_table": ("salaries", None, salaries_table.page)
-}
 
 routes = {key: route(previous, next, layout) for key, (previous, next, layout) in navigation.items()}
 

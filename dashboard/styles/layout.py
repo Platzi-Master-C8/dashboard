@@ -33,7 +33,9 @@ def grid(cols, rows, col_align="center", row_align="center", areas=None):
             "justifyItems": row_align,
             "alignItems": col_align,
             "height": "100%",
-            "width": "100%"
+            "width": "100%",
+            "gridColumnGap": "20px",
+            "gridRowGap": "20px"
             } | grid_columns | grid_rows | grid_areas
 
 

@@ -4,9 +4,9 @@ from dashboard.data import numberOfCompanies, numberOfPositions, numberOfSkills
 
 
 def _build_layout():
-    _layoutStructure = ["companies .        .",
+    _layoutStructure = ["companies .        skills",
                         ".      positions   .",
-                        ".         .    skills"]
+                        ".         .    ."]
     with engine.connect() as conn:
         companies = numberOfCompanies(conn)
         positions = numberOfPositions(conn)
@@ -17,9 +17,9 @@ def _build_layout():
                 "assets/sample.png"
             ),
             layout.grid([
-                layout.area(infographic.value("Companies", 5000), "companies"),
-                layout.area(infographic.value("Positions", 30000), "positions"),
-                layout.area(infographic.value("Skills", 200), "skills")
+                layout.area(infographic.value("Companies", companies), "companies"),
+                layout.area(infographic.value("Positions", positions), "positions"),
+                layout.area(infographic.value("Skills", skills), "skills")
             ], 3, 3, _layoutStructure)
         )
 

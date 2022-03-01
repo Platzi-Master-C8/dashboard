@@ -5,3 +5,4 @@ dash-bootstrap-components
 plotly==5.6.0
 SQLAlchemy==1.4.29
 psycopg2-binary==2.9.3
+stylecloud

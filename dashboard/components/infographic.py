@@ -2,6 +2,21 @@ from dash import html, dcc, dash_table
 from dashboard.styles import layout, infographic, base, colors
 from plotly import graph_objects as go, colors as c
 from typing import List
+import stylecloud
+
+
+def wordcloud(words: list, shape: str, size: int, output_name: str):
+    words = " ".join(words)
+    stylecloud.gen_stylecloud(text=words,
+                              icon_name=f'fas {shape}',
+                              palette='colorbrewer.diverging.Spectral_11',
+                              background_color="black",
+                              output_name=output_name,
+                              size=size,
+                              gradient='horizontal')
+    return html.Img(src=output_name, style={"width": f"{size}px",
+                                            "height": f"{size}px",
+                                            "backgroundSize": "cover"})
 
 
 def text(text: str):

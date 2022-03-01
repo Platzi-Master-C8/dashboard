@@ -65,13 +65,14 @@ def mostRequestedSkills(conn):
 
 
 def bestPayedSkills(conn):
-    return execute(conn, """select avg(p.salary), count(p.salary) ,skill
+    return execute(conn, """select avg(p.salary) salary, count(p.salary) num_offers, skill
                             from skill s
                             inner join position_skill ps on (s.id_skill = ps.skill_id)
                             inner join "position" p  on (p.id_position = ps.position_id)
                             group by skill
                             having count(p.salary) >= 3
                             order by 1 desc
+                            limit 10
                             """)
 
 

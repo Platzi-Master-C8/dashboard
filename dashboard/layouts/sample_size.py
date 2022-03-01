@@ -1,6 +1,11 @@
 from dashboard.components import infographic, layout
 from dashboard.datasource import engine
-from dashboard.data import numberOfCompanies, numberOfPositions, numberOfSkills
+from dashboard.data import (
+    numberOfCompanies,
+    numberOfPositions,
+    numberOfSkills,
+    numberOfReviews
+)
 
 
 def _build_layout():
@@ -11,6 +16,7 @@ def _build_layout():
         companies = numberOfCompanies(conn)
         positions = numberOfPositions(conn)
         skills = numberOfSkills(conn)
+        reviews = numberOfReviews(conn)
         return layout.twoColumns(
             layout.titleAndImage(
                 "",

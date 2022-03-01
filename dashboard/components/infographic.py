@@ -15,7 +15,7 @@ def wordcloud(words: list, shape: str, size: int, output_name: str):
                               size=size,
                               gradient='horizontal')
     return html.Img(src=output_name, style={"width": f"{size}px",
-                                            "heigh": f"{size}px",
+                                            "height": f"{size}px",
                                             "backgroundSize": "cover"})
 
 

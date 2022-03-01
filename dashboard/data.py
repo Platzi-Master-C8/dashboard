@@ -197,6 +197,14 @@ def lowestReputation(conn):
                             """)
 
 
+def allSkills(conn):
+    return execute(conn, """select skill
+                            from skill s
+                            inner join position_skill ps on (s.id_skill = ps.skill_id)
+                            inner join "position" p  on (p.id_position = ps.position_id)
+                            """)
+
+
 def datasets(columns: list, data: CursorResult):
     data_sets = [[] for column in columns]
     size = len(columns)

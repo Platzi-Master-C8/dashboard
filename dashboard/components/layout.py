@@ -36,10 +36,12 @@ def grid(children, columns=1, rows=1, areas=None):
     return html.Div(children, style=layout.grid(columns, rows, areas=areas))
 
 
-def area(element, area: str):
+def area(element, area: str, col_align="center", row_align="center"):
     if area is None:
         return element
-    base.append(element, {"gridArea": area})
+    base.append(element, {"gridArea": area,
+                          "alignSelf": col_align,
+                          "justifySelf": row_align})
     return element
 
 

@@ -4,6 +4,10 @@ from plotly import graph_objects as go, colors as c
 from typing import List
 
 
+def text(text: str):
+    return dcc.Markdown(text)
+
+
 def info(data: any):
     children = data if isinstance(data, list) else [data]
     return html.Div(children, className="text-info")

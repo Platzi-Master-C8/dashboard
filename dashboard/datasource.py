@@ -2,11 +2,10 @@ from sqlalchemy import create_engine
 from sqlalchemy.sql import text
 from sqlalchemy.engine import Engine, Connection, CursorResult
 
-DATABASE_URI = "sqlite:///job_placement.db"
+DATABASE_URI = "postgresql://dywapbyl:baCNBzlMNccJ69at2VTQ4l8YIPD3xo_w@castor.db.elephantsql.com/dywapbyl"
 
 engine: Engine = create_engine(
-    DATABASE_URI,
-    connect_args={"check_same_thread": False}
+    DATABASE_URI, echo=False
 )
 
 

@@ -11,12 +11,12 @@ def route(previous, next, content):
         layout.grid([
             base.append(content, {"gridColumn": "span 2"}),
             base.append(
-                dcc.Link(["previous"],
+                dcc.Link(["Previous"],
                          href=previous,
                          className="btn btn-secondary") if previous is not None else layout.empty(),
                 {"justify-self": "end"}),
             base.append(
-                dcc.Link(["next"],
+                dcc.Link(["Next"],
                          href=next,
                          className="btn btn-primary") if next is not None else layout.empty(),
                 {"justify-self": "start"})

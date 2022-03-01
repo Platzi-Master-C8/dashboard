@@ -8,7 +8,7 @@ def _build_layout():
                         "companies_with_lowest_salaries"]
     with engine.connect() as conn:
         return layout.twoColumns(
-            layout.titleAndImage("", "assets/sample.png"),
+            layout.titleAndImage("", "assets/salary.gif"),
             layout.grid([
                 layout.area(infographic.bars("Highest salaries",
                                              *datasets(["name", "salary"], companiesWithBetterSalaries(conn))),

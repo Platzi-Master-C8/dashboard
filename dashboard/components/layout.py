@@ -7,7 +7,7 @@ def titleAndImage(title: str, img_src: str):
         children=[
             html.H1(title,
                     style=base.center | base.width100),
-            html.Img(src=img_src, style={"width": "75%",
+            html.Img(src=img_src, style={"width": "100%",
                                          "backgroundSize": "cover"})
         ],
         style=base.allArea | layout.titleAndImage

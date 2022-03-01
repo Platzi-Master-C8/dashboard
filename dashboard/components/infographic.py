@@ -50,11 +50,13 @@ def bars(title, labels, values):
     return dcc.Graph(figure=fig, style=base.allArea)
 
 
-def scatter(title, labels, values):
+def scatter(title, labels, values ,names):
     fig = go.Figure()
-    fig.add_scatter(x=labels, y=values, marker=dict(
-        color=c.qualitative.Plotly,
-    ))
+    fig.add_scatter(x=labels, y=values, 
+                    # marker=dict(
+        # color=c.qualitative.Plotly,
+    # )
+    )
     fig.update_layout(title=title, template="plotly_dark", xaxis_tickangle=-45)
     return dcc.Graph(figure=fig, style=base.allArea)
 

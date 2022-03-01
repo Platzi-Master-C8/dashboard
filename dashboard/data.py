@@ -62,16 +62,27 @@ def companiesWithLowestSalaries(conn):
 
 
 def mostRequestedSkills(conn):
-    return execute(conn, """SELECT count(*), skill 
+    return execute(conn, """SELECT count(*) count, skill 
                             FROM skill s
                             INNER JOIN position_skill ps ON (s.id_skill = ps.skill_id)
                             INNER JOIN "position" p  ON (p.id_position = ps.position_id)
                             GROUP BY skill 
-                            ORDER BY 1 DESC""")
+                            ORDER BY count DESC
+                            LIMIT 10""")
+    
+    
+def lessRequestedSkills(conn):
+    return execute(conn, """SELECT count(*) count , skill 
+                            FROM skill s
+                            INNER JOIN position_skill ps ON (s.id_skill = ps.skill_id)
+                            INNER JOIN "position" p  ON (p.id_position = ps.position_id)
+                            GROUP BY skill 
+                            ORDER BY count ASC
+                            LIMIT 10""")
 
 
 def bestPayedSkills(conn):
-    return execute(conn, """SELECT avg(p.salary), count(p.salary) ,skill
+    return execute(conn, """SELECT avg(p.salary) salary, count(p.salary) offers, skill
                             FROM skill s
                             INNER JOIN position_skill ps ON (s.id_skill = ps.skill_id)
                             INNER JOIN "position" p  ON (p.id_position = ps.position_id)

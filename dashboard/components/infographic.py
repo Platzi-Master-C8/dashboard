@@ -33,3 +33,13 @@ def bars(title, labels, values):
     fig.update_traces(texttemplate='%{y:.2s}', textposition="auto")
     fig.update_layout(title=title, template="plotly_dark", xaxis_tickangle=-45)
     return dcc.Graph(figure=fig, style=base.allArea)
+
+
+def bubbles(title, labels, values, sizes):
+    fig = go.Figure()
+    fig.add_scatter(x=labels, y=values, marker=dict(
+        color=c.qualitative.Plotly,
+        size=sizes
+    ))
+    fig.update_layout(title=title, template="plotly_dark", xaxis_tickangle=-45)
+    return dcc.Graph(figure=fig, style=base.allArea)

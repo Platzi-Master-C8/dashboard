@@ -31,7 +31,6 @@ def run_app(embedded=True):
     @app.callback(Output("main_content", "children"),
                   Input("location", "pathname"))
     def display_layout(pathname):
-        print(unquote(pathname)[1:])
         return routes.get(unquote(pathname)[1:], routes["start"])
 
     if embedded:

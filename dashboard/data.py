@@ -34,30 +34,32 @@ def betterSalariesForModality(conn):
 
 
 def betterSalariesForSeniority(conn):
-    return execute(conn, """SELECT max(p.salary) salary, s.seniority 
-                        FROM "position" p 
-                        INNER JOIN seniority s ON (p.seniority_id = s.id_seniority)
-                        where s.seniority != 'unknown'
-                        GROUP BY s.seniority 
-                        ORDER BY 1 DESC""")
+    return execute(conn, """SELECT PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY position.salary) as median, s.seniority
+                            FROM position
+                            INNER JOIN seniority s ON (position.seniority_id = s.id_seniority)
+                            WHERE s.seniority != 'unknown'
+                              AND position.salary IS NOT NULL
+                            GROUP BY s.seniority
+                            ORDER BY 1 DESC""")
 
 
 def companiesWithBetterSalaries(conn):
-    return execute(conn, """SELECT max(p.salary) salary, c.name 
-                        FROM "position" p
-                        INNER JOIN company c ON (c.id_company = p.company_id) 
-                        GROUP BY c.name
-                        ORDER BY 1 DESC
-                        limit 5""")
+    return execute(conn, """SELECT PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY position.salary) as salary, company.name
+                            FROM position
+                            INNER JOIN company ON (company.id_company = position.company_id)
+                            WHERE salary IS NOT NULL
+                            GROUP BY company.name, position.salary
+                            ORDER BY salary DESC
+                            limit 5""")
 
 
 def companiesWithLowestSalaries(conn):
-    return execute(conn, """SELECT max(p.salary) salary, c.name 
+    return execute(conn, """SELECT max(p.salary) AS salary, c.name 
                             FROM "position" p
                             INNER JOIN company c ON (c.id_company = p.company_id) 
                             GROUP BY c.name
                             having max(p.salary) != 0
-                            ORDER BY 1 ASC
+                            ORDER BY salary
                             limit 5""")
 
 
@@ -81,16 +83,6 @@ def bestPayedSkills(conn):
                             """)
 
 
-# def positionsBySkills(conn):
-#     return execute(conn, """SELECT count(p.num_offers), skill
-#                             FROM skill s
-#                             INNER JOIN position_skill ps ON (s.id_skill = ps.skill_id)
-#                             INNER JOIN "position" p  ON (p.id_position = ps.position_id)
-#                             GROUP BY skill
-#                             ORDER BY 1 DESC
-#                             """)
-
-
 def mostRequestedPositions(conn):
     return execute(conn, """SELECT count(*), pc.category 
                             FROM position_category pc 
@@ -110,78 +102,32 @@ def betterOffers(conn):
                             """)
 
 
-def highestCulture(conn):
-    """AVG salarial de acuerdo al culture score y al total_reviews"""
-    return execute(conn, """SELECT max(salary), c.name, culture_score 
-                            FROM "position" p 
-                            INNER JOIN company c ON (p.company_id = c.id_company)
-                            GROUP BY c.name, culture_score
-                            ORDER BY 3 DESC
-                            """)
+def companiesReputation():
+    return """SELECT PERCENTILE_CONT(0.5) WITHIN GROUP(ORDER BY position.salary) median,
+                    name,
+                    culture_score,
+                    work_life_balance_score,
+                    career_opportunities_score,
+                    perks_score
+                    FROM position
+                    INNER JOIN company on (position.company_id = company.id_company)
+                    WHERE total_ratings > 10 AND salary > 0
+                    GROUP BY name,
+                            culture_score,
+                            work_life_balance_score,
+                            career_opportunities_score,
+                            perks_score
+                    ORDER BY culture_score DESC
+                    LIMIT 5
+            """
 
 
-def lowestCulture(conn):
-    """AVG salarial de acuerdo al culture score y al total_reviews"""
-    return execute(conn, """SELECT max(salary), c.name, culture_score 
-                            FROM "position" p 
-                            INNER JOIN company c ON (p.company_id = c.id_company)
-                            GROUP BY c.name, culture_score
-                            ORDER BY 3 ASC
-                            """)
-
-
-def highestWorkLifeBalance(conn):
-    return execute(conn, """SELECT max(salary), c.name, c.work_life_balance  
-                            FROM "position" p 
-                            INNER JOIN company c ON (p.company_id = c.id_company)
-                            GROUP BY c.name, work_life_balance
-                            ORDER BY 3 DESC
-                            """)
-
-
-def lowestWorkLifeBalance(conn):
-    return execute(conn, """SELECT max(salary), c.name, c.work_life_balance  
-                            FROM "position" p 
-                            INNER JOIN company c ON (p.company_id = c.id_company)
-                            GROUP BY c.name, work_life_balance
-                            ORDER BY 3 ASC
-                            """)
-
-
-def highestCareerOportunities(conn):
-    return execute(conn, """SELECT max(salary), c.name, c.carrer_opportunities 
-                            FROM "position" p 
-                            INNER JOIN company c ON (p.company_id = c.id_company)
-                            GROUP BY c.name
-                            ORDER BY 3 DESC
-                            """)
-
-
-def lowestCareerOportunities(conn):
-    return execute(conn, """SELECT max(salary), c.name, c.carrer_opportunities 
-                            FROM "position" p 
-                            INNER JOIN company c ON (p.company_id = c.id_company)
-                            GROUP BY c.name
-                            ORDER BY 3 ASC
-                            """)
-
-
-def highestReputation(conn):
-    return execute(conn, """SELECT max(salary), c.name, c.avg_reputation  
-                            FROM "position" p 
-                            INNER JOIN company c ON (p.company_id = c.id_company)
-                            GROUP BY c.name
-                            ORDER BY 3 DESC
-                            """)
-
-
-def lowestReputation(conn):
-    return execute(conn, """SELECT max(salary), c.name, c.avg_reputation  
-                            FROM "position" p 
-                            INNER JOIN company c ON (p.company_id = c.id_company)
-                            GROUP BY c.name
-                            ORDER BY 3 ASC
-                            """)
+def companiesBestAvgReputation(conn):
+    return execute(conn, """SELECT name, avg_reputation
+                            FROM company
+                            WHERE total_ratings > 100
+                            ORDER BY avg_reputation DESC;
+                        """)
 
 
 def allSkills(conn):
@@ -190,6 +136,18 @@ def allSkills(conn):
                             inner join position_skill ps on (s.id_skill = ps.skill_id)
                             inner join "position" p  on (p.id_position = ps.position_id)
                             """)
+
+
+def allReviews(conn):
+    return execute(conn, """SELECT content_type FROM user_review""")
+
+
+def allDescriptions(conn):
+    return execute(conn, """SELECT description FROM position WHERE NOT description LIKE '%Time zone%'""")
+
+
+def remotePositions():
+    return """SELECT remote, count(*) from position GROUP by remote"""
 
 
 def datasets(columns: list, data: CursorResult):

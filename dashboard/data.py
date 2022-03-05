@@ -33,6 +33,15 @@ def betterSalariesForModality(conn):
                         ORDER BY 1 DESC""")
 
 
+def betterSalaryForRemote(conn):
+    return execute(conn, """SELECT 
+                        PERCENTILE_CONT(0.5) WITHIN GROUP(ORDER BY salary) median,
+                        remote
+                        FROM "position" 
+                        GROUP BY remote
+                        ORDER BY 1 DESC""")
+
+
 def betterSalariesForSeniority(conn):
     return execute(conn, """SELECT max(p.salary) salary, s.seniority 
                         FROM "position" p 

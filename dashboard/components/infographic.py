@@ -64,11 +64,9 @@ def bars(title: str, labels: list, values: list):
     return dcc.Graph(figure=fig, style=base.allArea)
 
 
-def scatter(title: str, labels: list, values: list):
+def scatter(title: str, labels: list, values: list, names: list):
     fig = go.Figure()
-    fig.add_scatter(x=labels, y=values, marker=dict(
-        color=c.qualitative.Plotly,
-    ))
+    fig.add_scatter(x=labels, y=values)
     fig.update_layout(title=title, template="plotly_dark", xaxis_tickangle=-45)
     return dcc.Graph(figure=fig, style=base.allArea)
 
